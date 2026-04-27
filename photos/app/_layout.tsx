@@ -1,25 +1,15 @@
 import { Tabs } from 'expo-router';
-
-import React from 'react';
-
-
+import { FavoritosProvider } from './context/FavoritosContext';
 
 export default function TabLayout() {
-
   return (
-
-    <Tabs screenOptions={{ tabBarActiveTintColor: 'blue' }}>
-
-      <Tabs.Screen name="index" options={{ title: 'Inicio' }} />
-
-      <Tabs.Screen name="FAVORITO" options={{ title: 'Favoritos' }} />
-
-      <Tabs.Screen name="ORIGINAL" options={{ title: 'Original' }} />
-
-      <Tabs.Screen name="INFORMATIVA" options={{ title: 'Info' }} />
-
-    </Tabs>
-
+    <FavoritosProvider>
+      <Tabs screenOptions={{ tabBarActiveTintColor: 'teal' }}>
+        <Tabs.Screen name="index" options={{ title: 'Inicio' }} />
+        <Tabs.Screen name="FAVORITO" options={{ title: 'Favoritos' }} />
+        <Tabs.Screen name="INFORMATIVA" options={{ title: 'Info' }} />
+        <Tabs.Screen name="ORIGINAL" options={{ title: 'Extra' }} />
+      </Tabs>
+    </FavoritosProvider>
   );
-
 }

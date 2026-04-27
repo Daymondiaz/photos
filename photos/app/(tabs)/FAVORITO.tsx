@@ -1,39 +1,21 @@
-import { useState, useCallback } from 'react';
 import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from 'expo-router';
+import { useMisFavoritos } from '../context/FavoritosContext'; 
 
 export default function PantallaFavoritos() {
-  // Aquí usamos <any[]> para evitar el error de TypeScript
-  const [misFavs, setMisFavs] = useState<any[]>([]);
-
-  useFocusEffect(
-    useCallback(() => {
-      async function cargarFavoritos() {
-        try {
-          const datos = await AsyncStorage.getItem('listaFavoritos');
-          if (datos) {
-            setMisFavs(JSON.parse(datos));
-          }
-        } catch (e) {
-          console.log('Error al leer favoritos');
-        }
-      }
-      cargarFavoritos();
-    }, [])
-  );
+  const { listaFavoritos } = useMisFavoritos();
 
   return (
     <View style={misEstilos.contenedor}>
       <FlatList 
-        data={misFavs}
-        keyExtractor={(item: any) => item.id}
+        data={listaFavoritos}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={misEstilos.tarjeta}>
-            <Image source={{ uri: item.download_url }} style={misEstilos.foto} />
-            <Text style={misEstilos.texto}>{item.author}</Text>
+             <Image source={{ uri: item.download_url }} style={misEstilos.fotoMini} />
+             <Text style={misEstilos.autor}>{item.author}</Text>
           </View>
         )}
+        ListEmptyComponent={<Text style={misEstilos.textoVacio}>Aún no tienes fotos favoritas.</Text>}
       />
     </View>
   );
@@ -41,7 +23,8 @@ export default function PantallaFavoritos() {
 
 const misEstilos = StyleSheet.create({
   contenedor: { flex: 1, padding: 20 },
-  tarjeta: { marginBottom: 20, alignItems: 'center' },
-  foto: { width: 300, height: 200, borderRadius: 10 },
-  texto: { marginTop: 10, fontSize: 16 }
+  tarjeta: { flexDirection: 'row', alignItems: 'center', marginBottom: 15, borderBottomWidth: 1, borderBottomColor: '#eee', paddingBottom: 10 },
+  fotoMini: { width: 60, height: 60, borderRadius: 10, marginRight: 15 },
+  autor: { fontSize: 16, fontWeight: 'bold' },
+  textoVacio: { fontSize: 18, textAlign: 'center', marginTop: 50, color: '#666' }
 });
